@@ -1,0 +1,43 @@
+# [DRIVEN-MODULE-REF-1092] - Configuração de ambiente seguro
+
+# Dependências (Nunca devem ir para o Git)
+node_modules/
+backend/node_modules/
+mobile/node_modules/
+
+# Variáveis de Ambiente / Credenciais (Segurança Máxima)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Builds e Arquivos Gerados de Compilação
+dist/
+build/
+bin/
+obj/
+
+# Arquivos específicos do Expo / Mobile
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.apk
+*.aab
+*.env.local
+
+# Banco de dados local (SQLite) para não misturar seus testes com os do avaliador
+backend/*.sqlite
+backend/*.db
+
+# Arquivos do Sistema Operacional e Editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
