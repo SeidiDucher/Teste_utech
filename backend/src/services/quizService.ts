@@ -23,9 +23,25 @@ class QuizService{
         throw new Error(`Erro ao buscar dados da API externa: ${response.statusText}`);
       }
 
-      const allQuestions = (await response.json()) as QuizQuestao[];
+      const raw = await response.json();
 
-      // Filtrando e separando por dificuldade
+      // Mapear/normalizar o JSON externo para o modelo interno (QuizQuestao)
+      const allQuestions: QuizQuestao[] = (Array.isArray(raw) ? raw : []).map((q: any, idx: number) => {
+        const difficultyRaw = (q.difficulty ?? q.dificuldade ?? '').toString().toLowerCase();
+        const dificuldade = difficultyRaw.startsWith('e') || difficultyRaw === 'easy' ? 'facil'
+          : (difficultyRaw.startsWith('m') || difficultyRaw === 'medium' ? 'medio' : 'dificil');
+
+        return {
+          id: q.id ?? String(idx),
+          categoria: q.category ?? q.categoria ?? 'geral',
+          dificuldade,
+          pergunta: q.question ?? q.pergunta ?? '',
+          respostaCorreta: q.correct_answer ?? q.respostaCorreta ?? '',
+          respostaErrada: q.incorrect_answers ?? q.respostaErrada ?? []
+        } as QuizQuestao;
+      });
+
+      // Filtrando e separando por dificuldade (já normalizado)
       const easyQuestions = allQuestions.filter(q => q.dificuldade === 'facil');
       const mediumQuestions = allQuestions.filter(q => q.dificuldade === 'medio');
       const hardQuestions = allQuestions.filter(q => q.dificuldade === 'dificil');

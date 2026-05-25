@@ -17,13 +17,13 @@ export async function getDatabaseConnection(): Promise<Database> {
         driver: sqlite3.Database
     });
 
-    // Cria a tabela de ranking se ela não existir
+    // Cria a tabela de ranking se ela não existir (colunas em inglês usadas pelas queries)
     await db.exec(`
         CREATE TABLE IF NOT EXISTS ranking (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            ponto INTEGER NOT NULL,
-            dataCriacao DATETIME DEFAULT CURRENT_TIMESTAMP
+            name TEXT NOT NULL,
+            score INTEGER NOT NULL,
+            createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
         );
   `);
 
