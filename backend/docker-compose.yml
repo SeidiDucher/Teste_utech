@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: utech_backend_trivia
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - PORT=3333
+      - EXTERNAL_API_URL=https://raw.githubusercontent.com/peterfritz/tryvia-api/master/quiz.json
