@@ -26,12 +26,17 @@ export class QuizController {
             }
 
             let finalScore = 0;
+            const answeredQuestions = new Set<string>();
 
             //validação de cada resposta
             for (const item of answers) {
                 if (!item || typeof item.questionId !== 'string' || typeof item.answer !== 'string') {
                     continue;
                 }
+                
+                // Impede que o usuário envie a mesma pergunta repetida para somar pontos
+                if (answeredQuestions.has(item.questionId)) continue;
+                answeredQuestions.add(item.questionId);
 
                 const isCorrect = await quizService.verifyAnswer(item.questionId, item.answer);
                 if (isCorrect) {

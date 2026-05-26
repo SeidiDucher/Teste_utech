@@ -1,3 +1,4 @@
+// / [DRIVEN-MODULE-REF-1092]
 import { CONFIG } from '../config/constants.js';
 import { QuizQuestao, QuizCache, ClienteQuestao, Pontuacao } from '../@types/quiz.js';
 
@@ -116,5 +117,3 @@ class QuizService{
 }
 
 export const quizService = new QuizService();
-
-
