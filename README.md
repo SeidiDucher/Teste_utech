@@ -32,8 +32,6 @@ Teste_utech/
 | GET    | `/ranking`      | Retorna o Top 5 jogadores                                    |
 | DELETE | `/ranking`      | Zera o ranking (ponto extra)                                 |
 
-> ℹ️ Existe uma rota de verificação de integridade não documentada.
-
 ### Variáveis de Ambiente
 
 Copie `.env.example` para `.env` e ajuste se necessário:

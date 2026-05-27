@@ -1,10 +1,11 @@
-// / [DRIVEN-MODULE-REF-1092]
+
 import { CONFIG } from '../config/constants.js';
 import { QuizQuestion, QuizCache, ClientQuestion } from '../@types/quiz.js';
 
 // Regras de negocio, filtro de dificuldade e cache inteligente
 class QuizService{
     private cache: QuizCache | null = null;
+    private questionBank: Map<string, QuizQuestion> = new Map();
 
     //funcão para embaralhar as opções
     private shuffleArray<T>(array: T[]): T[] {
@@ -54,6 +55,11 @@ class QuizService{
       const easyPool = this.shuffleArray(easyQuestions).slice(0, CONFIG.POOL_SIZE_PER_DIFFICULTY);
       const mediumPool = this.shuffleArray(mediumQuestions).slice(0, CONFIG.POOL_SIZE_PER_DIFFICULTY);
       const hardPool = this.shuffleArray(hardQuestions).slice(0, CONFIG.POOL_SIZE_PER_DIFFICULTY);
+
+      // Salva as questões no banco histórico para validação (previne falha se o cache resetar durante a partida)
+      [...easyPool, ...mediumPool, ...hardPool].forEach(q => {
+        this.questionBank.set(q.id, q);
+      });
 
       // Salva no estado da aplicação com o timestamp atual
       this.cache = {
@@ -111,8 +117,8 @@ class QuizService{
 
   // Método para validar se uma resposta está correta (será usado quando o front enviar as respostas)
   public async verifyAnswer(questionId: string, answer: string): Promise<boolean> {
-    const cachedQuestions = await this.ensureValidCache();
-    const originalQuestion = cachedQuestions.find(q => q.id === questionId);
+    // Busca no banco histórico imune ao reset de 10 minutos
+    const originalQuestion = this.questionBank.get(questionId);
 
     if (!originalQuestion) return false;
     return originalQuestion.correctAnswer === answer;

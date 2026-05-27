@@ -30,9 +30,9 @@ export function Trivia() {
   }
 
   const difficultyColors = {
-    facil: '#00b37e',
-    medio: '#e1a412',
-    dificil: '#f75a68',
+    easy: '#00b37e',
+    medium: '#e1a412',
+    hard: '#f75a68',
   };
 
   return (
@@ -46,16 +46,16 @@ export function Trivia() {
         <>
           <View style={styles.header}>
             <Text style={styles.progress}>{`Pergunta ${currentQuestionIndex + 1} de ${questions.length}`}</Text>
-            <View style={[styles.badge, { backgroundColor: difficultyColors[currentQuestion.dificuldade] }]}>
-              <Text style={styles.badgeText}>{currentQuestion.dificuldade.toUpperCase()}</Text>
+            <View style={[styles.badge, { backgroundColor: difficultyColors[currentQuestion.difficulty] }]}>
+              <Text style={styles.badgeText}>{currentQuestion.difficulty.toUpperCase()}</Text>
             </View>
           </View>
 
-          <Text style={styles.category}>{currentQuestion.categoria}</Text>
-          <Text style={styles.questionText}>{currentQuestion.pergunta}</Text>
+          <Text style={styles.category}>{currentQuestion.category}</Text>
+          <Text style={styles.questionText}>{currentQuestion.question}</Text>
 
           <View style={styles.optionsContainer}>
-            {currentQuestion.opcao.map((option, index) => (
+            {currentQuestion.options.map((option, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.optionButton}

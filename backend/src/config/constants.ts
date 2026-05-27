@@ -3,7 +3,7 @@ dotenv.config();
 
 export const CONFIG = {
   PORT: process.env.PORT || 3333,
-  EXTERNAL_API_URL: process.env.EXTERNAL_API_URL || 'https://raw.githubusercontent.com/peterfritz/tryvia-api/master/quiz.json',
+  EXTERNAL_API_URL: process.env.EXTERNAL_API_URL || 'EXTERNAL_API_URL=https://tryvia.ptr.red/api.php?amount=50',
   CACHE_DURATION_MS: 10 * 60 * 1000, // Pontos Extras: 10 minutos em milissegundos
   POOL_SIZE_PER_DIFFICULTY: 20,
   GAME_RULES: {
