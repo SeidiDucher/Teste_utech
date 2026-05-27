@@ -24,10 +24,13 @@ class QuizService{
         throw new Error(`Erro ao buscar dados da API externa: ${response.statusText}`);
       }
 
-      const raw = await response.json();
+      const raw = await response.json() as any;
+
+      // A API Tryvia retorna os dados dentro da propriedade "results"
+      const questionsList = Array.isArray(raw.results) ? raw.results : (Array.isArray(raw) ? raw : []);
 
       // Mapear/normalizar o JSON externo para o modelo interno (QuizQuestao)
-      const allQuestions: QuizQuestao[] = (Array.isArray(raw) ? raw : []).map((q: any, idx: number) => {
+      const allQuestions: QuizQuestao[] = questionsList.map((q: any, idx: number) => {
         const difficultyRaw = (q.difficulty ?? q.dificuldade ?? '').toString().toLowerCase();
         const dificuldade = difficultyRaw.startsWith('e') || difficultyRaw === 'easy' ? 'facil'
           : (difficultyRaw.startsWith('m') || difficultyRaw === 'medium' ? 'medio' : 'dificil');

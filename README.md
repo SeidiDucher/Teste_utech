@@ -43,7 +43,7 @@ cp backend/.env.example backend/.env
 
 ```env
 PORT=3333
-EXTERNAL_API_URL=https://raw.githubusercontent.com/peterfritz/tryvia-api/master/quiz.json
+EXTERNAL_API_URL=https://tryvia.ptr.red/api.php?amount=100
 ```
 
 ---
