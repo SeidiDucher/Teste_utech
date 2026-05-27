@@ -7,8 +7,8 @@ export class QuizController {
     //Get para gerar o quiz (6 perguntas)
     async getQuiz(req: Request, res: Response) {
         try {
-            const question = await quizService.generateGameQuiz();
-            res.json(question);
+            const questions = await quizService.generateGameQuiz();
+            res.json(questions);
         } 
         catch (error: any) {
             res.status(500).json({ error: 'Erro ao gerar o quiz', details: error.message });
@@ -18,10 +18,10 @@ export class QuizController {
     //Post para receber o resultado do quiz e salvar no ranking
     async submitAnswers(req: Request, res: Response) {
         try {
-            const { nome, answers } = req.body;
+            const { name, answers } = req.body;
 
-            if (!nome || !Array.isArray(answers)) {
-                res.status(400).json({ error: 'Nome e answers são obrigatórios e answers deve ser um array' });
+            if (!name || !Array.isArray(answers)) {
+                res.status(400).json({ error: 'Name e answers são obrigatórios e answers deve ser um array' });
                 return;
             }
 
@@ -47,10 +47,10 @@ export class QuizController {
             const db = await getDatabaseConnection();
             await db.run(
                 'INSERT INTO ranking (name, score) VALUES (?, ?)',
-                [nome, finalScore]
+                [name, finalScore]
             );
 
-            res.status(201).json({ nome, score: finalScore });
+            res.status(201).json({ name, score: finalScore });
         }
         catch (error: any) {
             res.status(500).json({ error: 'Erro ao processar respostas', details: error.message });

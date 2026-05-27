@@ -1,6 +1,6 @@
 // / [DRIVEN-MODULE-REF-1092]
 import { CONFIG } from '../config/constants.js';
-import { QuizQuestao, QuizCache, ClienteQuestao, Pontuacao } from '../@types/quiz.js';
+import { QuizQuestion, QuizCache, ClientQuestion } from '../@types/quiz.js';
 
 // Regras de negocio, filtro de dificuldade e cache inteligente
 class QuizService{
@@ -30,25 +30,25 @@ class QuizService{
       const questionsList = Array.isArray(raw.results) ? raw.results : (Array.isArray(raw) ? raw : []);
 
       // Mapear/normalizar o JSON externo para o modelo interno (QuizQuestao)
-      const allQuestions: QuizQuestao[] = questionsList.map((q: any, idx: number) => {
+      const allQuestions: QuizQuestion[] = questionsList.map((q: any, idx: number) => {
         const difficultyRaw = (q.difficulty ?? q.dificuldade ?? '').toString().toLowerCase();
-        const dificuldade = difficultyRaw.startsWith('e') || difficultyRaw === 'easy' ? 'facil'
-          : (difficultyRaw.startsWith('m') || difficultyRaw === 'medium' ? 'medio' : 'dificil');
+        const difficulty = difficultyRaw.startsWith('e') || difficultyRaw === 'easy' ? 'easy'
+          : (difficultyRaw.startsWith('m') || difficultyRaw === 'medium' ? 'medium' : 'hard');
 
         return {
           id: q.id ?? String(idx),
-          categoria: q.category ?? q.categoria ?? 'geral',
-          dificuldade,
-          pergunta: q.question ?? q.pergunta ?? '',
-          respostaCorreta: q.correct_answer ?? q.respostaCorreta ?? '',
-          respostaErrada: q.incorrect_answers ?? q.respostaErrada ?? []
-        } as QuizQuestao;
+          category: q.category ?? q.categoria ?? 'geral',
+          difficulty,
+          question: q.question ?? q.pergunta ?? '',
+          correctAnswer: q.correct_answer ?? q.respostaCorreta ?? '',
+          incorrectAnswers: q.incorrect_answers ?? q.respostaErrada ?? []
+        } as QuizQuestion;
       });
 
       // Filtrando e separando por dificuldade (já normalizado)
-      const easyQuestions = allQuestions.filter(q => q.dificuldade === 'facil');
-      const mediumQuestions = allQuestions.filter(q => q.dificuldade === 'medio');
-      const hardQuestions = allQuestions.filter(q => q.dificuldade === 'dificil');
+      const easyQuestions = allQuestions.filter(q => q.difficulty === 'easy');
+      const mediumQuestions = allQuestions.filter(q => q.difficulty === 'medium');
+      const hardQuestions = allQuestions.filter(q => q.difficulty === 'hard');
 
       // Embaralha cada bloco e pega no máximo 20 de cada (conforme regra do teste)
       const easyPool = this.shuffleArray(easyQuestions).slice(0, CONFIG.POOL_SIZE_PER_DIFFICULTY);
@@ -57,7 +57,7 @@ class QuizService{
 
       // Salva no estado da aplicação com o timestamp atual
       this.cache = {
-        questoes: [...easyPool, ...mediumPool, ...hardPool],
+        questions: [...easyPool, ...mediumPool, ...hardPool],
         updateTime: Date.now()
       };
       
@@ -68,7 +68,7 @@ class QuizService{
     }
   }
   // Garante que o cache exista e esteja válido dentro dos 10 minutos
-  private async ensureValidCache(): Promise<QuizQuestao[]> {
+  private async ensureValidCache(): Promise<QuizQuestion[]> {
     const now = Date.now();
     
     // Se não tem cache ou se passou de 10 minutos (CONFIG.CACHE_DURATION_MS), atualiza
@@ -76,17 +76,17 @@ class QuizService{
       await this.refreshCache();
     }
 
-    return this.cache!.questoes;
+    return this.cache!.questions;
   }
 
   // Gera a partida contendo as 6 perguntas nas proporções exatas (3 fáceis, 2 médias, 1 difícil)
-  public async generateGameQuiz(): Promise<ClienteQuestao[]> {
+  public async generateGameQuiz(): Promise<ClientQuestion[]> {
     const cachedQuestions = await this.ensureValidCache();
 
     // Separa o pool atual do cache por dificuldade
-    const easyPool = cachedQuestions.filter(q => q.dificuldade === 'facil');
-    const mediumPool = cachedQuestions.filter(q => q.dificuldade === 'medio');
-    const hardPool = cachedQuestions.filter(q => q.dificuldade === 'dificil');
+    const easyPool = cachedQuestions.filter(q => q.difficulty === 'easy');
+    const mediumPool = cachedQuestions.filter(q => q.difficulty === 'medium');
+    const hardPool = cachedQuestions.filter(q => q.difficulty === 'hard');
 
     // Sorteia a quantidade exata exigida pelo enunciado
     const selectedEasy = this.shuffleArray(easyPool).slice(0, CONFIG.GAME_RULES.EASY_COUNT);
@@ -97,14 +97,14 @@ class QuizService{
 
     // Mapeia para o formato do Cliente (ocultando a resposta correta e unificando as opções)
     return finalSelection.map(q => {
-      const options = this.shuffleArray([q.respostaCorreta, ...q.respostaErrada]);
+      const options = this.shuffleArray([q.correctAnswer, ...q.incorrectAnswers]);
       
       return {
         id: q.id,
-        categoria: q.categoria,
-        dificuldade: q.dificuldade,
-        pergunta: q.pergunta,
-        opcao: options
+        category: q.category,
+        difficulty: q.difficulty,
+        question: q.question,
+        options: options
       };
     });
   }
@@ -115,7 +115,7 @@ class QuizService{
     const originalQuestion = cachedQuestions.find(q => q.id === questionId);
 
     if (!originalQuestion) return false;
-    return originalQuestion.respostaCorreta === answer;
+    return originalQuestion.correctAnswer === answer;
   }
 }
 

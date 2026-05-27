@@ -3,24 +3,24 @@ import {create} from 'zustand';
 import axios from 'axios';
 import { API_URL } from '../config/api';
 
-export interface Questao{
+export interface Question {
     id: string;
-    categoria: string;
-    dificuldade: 'facil' | 'medio' | 'dificil';
-    pergunta: string;
-    opcao: string[];
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    question: string;
+    options: string[];
 }
 
-interface QuizResposta{
+interface QuizAnswer {
     questionId: string;
     answer: string;
 }
 
-interface QuizEstado{
+interface QuizState {
     playerName: string;
-    questions: Questao[];
+    questions: Question[];
     currentQuestionIndex: number;
-    answers: QuizResposta[];
+    answers: QuizAnswer[];
     isLoading: boolean;
     error: string | null;
     finalScore: number | null;
@@ -35,7 +35,7 @@ interface QuizEstado{
 }
 
 
-export const useQuizStore = create<QuizEstado>((set, get) => ({
+export const useQuizStore = create<QuizState>((set, get) => ({
   playerName: '',
   questions: [],
   currentQuestionIndex: 0,
@@ -50,7 +50,7 @@ export const useQuizStore = create<QuizEstado>((set, get) => ({
   fetchQuiz: async () => {
     set({ isLoading: true, error: null, answers: [], currentQuestionIndex: 0, finalScore: null });
     try {
-      const response = await axios.get<Questao[]>(`${API_URL}/quiz`);
+      const response = await axios.get<Question[]>(`${API_URL}/quiz`);
       set({ questions: response.data, isLoading: false });
     } catch (err: any) {
       set({ error: 'Não foi possível carregar o quiz. Tente novamente.', isLoading: false });
@@ -86,7 +86,7 @@ export const useQuizStore = create<QuizEstado>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/quiz/submit`, {
-        nome: playerName,
+        name: playerName,
         answers
       });
       

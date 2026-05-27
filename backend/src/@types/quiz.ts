@@ -1,32 +1,32 @@
 // o que vem de API externa
-export interface QuizQuestao{
+export interface QuizQuestion{
     id: string;
-    categoria: string;
-    dificuldade: 'facil' | 'medio' | 'dificil';
-    pergunta: string;
-    respostaCorreta: string;
-    respostaErrada: string[];
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    question: string;
+    correctAnswer: string;
+    incorrectAnswers: string[];
 }
 
 //o que back vai enviar
-export interface ClienteQuestao{
+export interface ClientQuestion{
     id: string;
-    categoria: string;
-    dificuldade: 'facil' | 'medio' | 'dificil';
-    pergunta: string;
-    opcao: string[]; // resposta_correta + resposta_errada
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    question: string;
+    options: string[]; // resposta_correta + resposta_errada
 }
 
 //estrutura de memoria do servidor
 export interface QuizCache{
-    questoes: QuizQuestao[];
+    questions: QuizQuestion[];
     updateTime: number;
 }
 
 // estrutura do ranking
-export interface Pontuacao{
-    idPlayer: number;
-    nome: string;
-    pontos: number;
-    dataCriacao: Date;
+export interface Score{
+    playerId: number;
+    name: string;
+    points: number;
+    createdAt: Date;
 }
