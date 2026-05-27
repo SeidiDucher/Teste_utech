@@ -1,4 +1,4 @@
-# 🧠 TryviaTech — Mini-Game de Trivia
+# TryviaTech — Mini-Game de Trivia
 
 Projeto desenvolvido como parte do **Desafio de Estágio uTech**. Consiste em um backend Node.js/Express com cache inteligente e banco SQLite, e um aplicativo mobile React Native (Expo) com gerenciamento de estado global via Zustand.
 
@@ -7,6 +7,7 @@ Projeto desenvolvido como parte do **Desafio de Estágio uTech**. Consiste em um
 ## 📁 Estrutura do Projeto
 
 ```
+
 Teste_utech/
 ├── backend/          # API REST — Node.js + Express + TypeScript
 └── mobile/           # App mobile — React Native + Expo + Zustand
@@ -43,7 +44,7 @@ cp backend/.env.example backend/.env
 
 ```env
 PORT=3333
-EXTERNAL_API_URL=https://tryvia.ptr.red/api.php?amount=100
+EXTERNAL_API_URL=https://tryvia.ptr.red/api.php?amount=50
 ```
 
 ---
@@ -63,47 +64,6 @@ cd Teste_utech/backend
 
 # 2. Suba o backend
 docker compose up --build
-```
-
-O backend estará disponível em `http://localhost:3333`.
-
----
-
-## 🐧 Rodando Manualmente no Linux
-
-### Pré-requisitos
-
-```bash
-# Node.js 20+
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Confirme as versões
-node -v   # v20.x.x
-npm -v    # 10.x.x
-```
-
-### Backend
-
-```bash
-cd backend
-
-# 1. Instale as dependências
-npm install
-
-# 2. Configure as variáveis de ambiente
-cp .env.example .env
-
-# 3. Compile o TypeScript
-npm run build
-
-# 4. Inicie o servidor
-node dist/server.js
-```
-
-Para desenvolvimento com hot-reload:
-```bash
-npm run dev
 ```
 
 O backend estará disponível em `http://localhost:3333`.
