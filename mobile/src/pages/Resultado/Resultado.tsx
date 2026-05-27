@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQuizStore } from '../../store/useQuizStore';
-import { Button } from '../../components/Button/button'; // Importando seu componente global
+import { Button } from '../../components/Button/button';
 import { styles } from './styles';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 interface RankingItem {
   id: number;
@@ -21,7 +22,7 @@ export function Resultado() {
   async function fetchRanking() {
     try {
       setLoadingRanking(true);
-      const response = await axios.get('http://localhost:3333/ranking');
+      const response = await axios.get(`${API_URL}/ranking`);
       setRanking(response.data);
     } catch (error) {
       console.error('Erro ao buscar ranking', error);
@@ -32,7 +33,7 @@ export function Resultado() {
 
   async function handleResetRanking() {
     try {
-      await axios.delete('http://localhost:3333/ranking');
+      await axios.delete(`${API_URL}/ranking`);
       fetchRanking();
     } catch (error) {
       console.error('Erro ao resetar ranking', error);

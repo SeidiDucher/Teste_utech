@@ -9,12 +9,10 @@
     // See also https://aka.ms/tsconfig/module
     "module": "NodeNext",
     "target": "es2022",
-    "types": [],
+    "types": ["node"],
     "moduleResolution": "nodenext",
     // For nodejs:
     "lib": ["es2022"],
-    // "types": ["node"],
-    // and npm install -D @types/node
 
     // Other Outputs
     "sourceMap": true,

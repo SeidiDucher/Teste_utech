@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 export interface Questao{
     id: string;
@@ -32,8 +33,6 @@ interface QuizEstado{
     resetGame: () => void;
 }
 
-// Configuração da URL do Backend (Altere para o IP da sua máquina se testar em dispositivo físico)
-const API_URL = 'http://localhost:3333';
 
 export const useQuizStore = create<QuizEstado>((set, get) => ({
   playerName: '',

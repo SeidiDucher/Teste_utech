@@ -8,7 +8,6 @@ const rankingController = new RankingController();
 
 // Definição de Rotas da API
 
-// Rota Oculta 
 routes.get('/health-check', (req, res) => {
   res.json({ status: 'verified' });
 });
